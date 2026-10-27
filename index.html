@@ -1,0 +1,1302 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Explorando los Prismas en el Valle del Mantaro - Matemática 2.° Sec.</title>
+    <style>
+        :root {
+            --primary: #0d9488;
+            --primary-dark: #0f766e;
+            --primary-light: #ccfbf1;
+            --secondary: #d97706;
+            --secondary-light: #fef3c7;
+            --accent: #2563eb;
+            --bg-main: #f8fafc;
+            --card-bg: #ffffff;
+            --text-dark: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --success: #16a34a;
+            --success-bg: #dcfce7;
+            --error: #dc2626;
+            --error-bg: #fee2e2;
+            --warning: #ca8a04;
+            --warning-bg: #fef9c3;
+            --radius: 12px;
+            --shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -2px rgba(0,0,0,0.05);
+            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -4px rgba(0,0,0,0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', system-ui, -apple-system, Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-dark);
+            line-height: 1.5;
+            padding: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 960px;
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid var(--border);
+        }
+
+        /* Encabezado */
+        header {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+            color: white;
+            padding: 16px 20px;
+            text-align: center;
+            position: relative;
+        }
+
+        header h1 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        header p {
+            font-size: 0.85rem;
+            opacity: 0.9;
+        }
+
+        .context-badge {
+            display: inline-block;
+            background: var(--secondary);
+            color: white;
+            font-size: 0.75rem;
+            padding: 2px 10px;
+            border-radius: 20px;
+            font-weight: 600;
+            margin-top: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Barra de Progreso y Marcadores */
+        .progress-bar-container {
+            background: #e2e8f0;
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .progress-tracker {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .progress-text {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            white-space: nowrap;
+        }
+
+        .progress-bg {
+            width: 100%;
+            height: 10px;
+            background: #cbd5e1;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--primary);
+            width: 20%;
+            transition: width 0.4s ease;
+        }
+
+        .score-display {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--primary-dark);
+            background: var(--primary-light);
+            padding: 4px 12px;
+            border-radius: 20px;
+        }
+
+        /* Área de Contenido Principal */
+        main {
+            padding: 20px;
+            flex: 1;
+        }
+
+        .activity-card {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .activity-header {
+            border-bottom: 2px solid var(--primary-light);
+            padding-bottom: 8px;
+        }
+
+        .activity-level {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--secondary);
+            text-transform: uppercase;
+        }
+
+        .activity-title {
+            font-size: 1.15rem;
+            color: var(--primary-dark);
+            font-weight: 700;
+        }
+
+        .context-box {
+            background: #f1f5f9;
+            border-left: 4px solid var(--secondary);
+            padding: 12px 16px;
+            border-radius: 0 var(--radius) var(--radius) 0;
+            font-size: 0.95rem;
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        /* Layout Interactivo (SVG + Pregunta) */
+        .interactive-layout {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+            align-items: center;
+        }
+
+        @media (min-width: 768px) {
+            .interactive-layout {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .svg-container {
+            background: #ffffff;
+            border: 2px dashed var(--border);
+            border-radius: var(--radius);
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 260px;
+            position: relative;
+        }
+
+        .svg-container svg {
+            max-width: 100%;
+            height: auto;
+            max-height: 280px;
+        }
+
+        .svg-hint {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 6px;
+            text-align: center;
+        }
+
+        /* Elementos SVG interactivos */
+        .svg-interactive-element {
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .svg-interactive-element:hover {
+            fill-opacity: 0.6 !important;
+            stroke-width: 3px !important;
+            filter: drop-shadow(0 0 4px var(--primary));
+        }
+
+        .svg-element-selected {
+            fill: var(--secondary) !important;
+            fill-opacity: 0.7 !important;
+            stroke: #b45309 !important;
+            stroke-width: 3px !important;
+        }
+
+        /* Formulario y Preguntas */
+        .question-box {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .question-text {
+            font-weight: 600;
+            font-size: 1rem;
+            color: var(--text-dark);
+        }
+
+        /* Opciones Múltiples y V/F */
+        .options-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .option-btn {
+            background: white;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            padding: 10px 14px;
+            text-align: left;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .option-btn:hover {
+            border-color: var(--primary);
+            background: var(--primary-light);
+        }
+
+        .option-btn.selected {
+            border-color: var(--primary);
+            background: var(--primary-light);
+            font-weight: 600;
+        }
+
+        .option-radio {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            border: 2px solid var(--text-muted);
+            display: inline-block;
+            flex-shrink: 0;
+        }
+
+        .option-btn.selected .option-radio {
+            border-color: var(--primary-dark);
+            background: var(--primary-dark);
+            box-shadow: inset 0 0 0 3px white;
+        }
+
+        /* Entradas Numéricas */
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .input-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .input-field {
+            padding: 10px 12px;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 1rem;
+            width: 140px;
+            outline: none;
+            transition: border 0.2s;
+        }
+
+        .input-field:focus {
+            border-color: var(--primary);
+        }
+
+        .unit-label {
+            font-weight: 600;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        /* Secuencia de Pasos / Procedimientos */
+        .step-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .step-item {
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            cursor: pointer;
+        }
+
+        /* Panel de Retroalimentación Socioconstructivista */
+        .feedback-panel {
+            padding: 12px 16px;
+            border-radius: var(--radius);
+            font-size: 0.9rem;
+            display: none;
+            animation: fadeIn 0.3s ease-in-out;
+            line-height: 1.5;
+        }
+
+        .feedback-panel.success {
+            display: block;
+            background: var(--success-bg);
+            color: #14532d;
+            border: 1px solid #bbf7d0;
+        }
+
+        .feedback-panel.error-1 {
+            display: block;
+            background: var(--warning-bg);
+            color: #713f12;
+            border: 1px solid #fef08a;
+        }
+
+        .feedback-panel.error-2 {
+            display: block;
+            background: var(--error-bg);
+            color: #7f1d1d;
+            border: 1px solid #fecaca;
+        }
+
+        .feedback-title {
+            font-weight: 700;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* Botones de Acción */
+        .action-bar {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            margin-top: 10px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+
+        .btn-secondary {
+            background: var(--secondary);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #b45309;
+        }
+
+        .btn:disabled {
+            background: #cbd5e1;
+            cursor: not-allowed;
+        }
+
+        /* Pantalla Final de Resumen */
+        .final-screen {
+            display: none;
+            flex-direction: column;
+            gap: 20px;
+            text-align: center;
+            padding: 10px 0;
+        }
+
+        .final-header h2 {
+            color: var(--primary-dark);
+            font-size: 1.6rem;
+            margin-bottom: 6px;
+        }
+
+        .final-badge {
+            font-size: 3rem;
+            margin: 10px 0;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 12px;
+            margin: 10px 0;
+        }
+
+        .stat-card {
+            background: #f1f5f9;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+
+        .stat-val {
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: var(--primary-dark);
+        }
+
+        .stat-lbl {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .competencies-box {
+            background: var(--primary-light);
+            border: 1px solid #99f6e4;
+            padding: 16px;
+            border-radius: var(--radius);
+            text-align: left;
+        }
+
+        .competencies-box h3 {
+            font-size: 0.95rem;
+            color: var(--primary-dark);
+            margin-bottom: 8px;
+        }
+
+        .competencies-box ul {
+            padding-left: 20px;
+            font-size: 0.85rem;
+            color: var(--text-dark);
+        }
+
+        .competencies-box li {
+            margin-bottom: 4px;
+        }
+
+        .motivational-msg {
+            font-style: italic;
+            color: var(--secondary);
+            font-weight: 600;
+            font-size: 0.95rem;
+            background: var(--secondary-light);
+            padding: 12px;
+            border-radius: 8px;
+        }
+
+        /* Recuadro de Autoras */
+        .authors-box {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-left: 4px solid var(--primary);
+            padding: 10px 14px;
+            border-radius: var(--radius);
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            text-align: left;
+            align-self: flex-start;
+            margin-top: 10px;
+        }
+
+        /* Fórmulas Guía */
+        .formula-tag {
+            display: inline-block;
+            background: #e0f2fe;
+            color: #0369a1;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin: 2px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Estilo para las etiquetas de selección de SVG */
+        .click-target-info {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--primary-dark);
+            margin-top: 6px;
+            min-height: 24px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Explorando los Prismas en el Valle del Mantaro</h1>
+        <p>Matemática 2.° de Secundaria - Competencia: Resuelve problemas de forma, movimiento y localización</p>
+        <span class="context-badge">Junín - Perú</span>
+    </header>
+
+    <div class="progress-bar-container" id="progressContainer">
+        <div class="progress-tracker">
+            <span class="progress-text" id="progressText">Actividad 1 de 5</span>
+            <div class="progress-bg">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+        </div>
+        <div class="score-display" id="scoreDisplay">Puntaje: 0 pts</div>
+    </div>
+
+    <main>
+        <!-- MÓDULO INTERACTIVO DE ACTIVIDADES -->
+        <div id="activityContainer" class="activity-card">
+            <!-- Se inyecta dinámicamente mediante JS -->
+        </div>
+
+        <!-- PANTALLA FINAL -->
+        <div id="finalScreen" class="final-screen">
+            <div class="final-header">
+                <div class="final-badge">🏆</div>
+                <h2>¡EXCELENTE! HAS COMPLETADO EL MÓDULO</h2>
+                <p>Has demostrado tus competencias matemáticas reconociendo y aplicando propiedades de los prismas en la cultura del Valle del Mantaro.</p>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-val" id="statCorrect">0/5</div>
+                    <div class="stat-lbl">Aciertos Directos</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-val" id="statAttempts">0</div>
+                    <div class="stat-lbl">Intentos Totales</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-val" id="statPercent">0%</div>
+                    <div class="stat-lbl">Logro de Eficiencia</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-val" id="statScore">0</div>
+                    <div class="stat-lbl">Puntaje Final</div>
+                </div>
+            </div>
+
+            <div class="competencies-box">
+                <h3>Aprendizajes Alcanzados (CNEB - MINEDU):</h3>
+                <ul>
+                    <li><strong>Modela objetos:</strong> Representa estructuras reales del Valle del Mantaro mediante prismas rectos.</li>
+                    <li><strong>Comunica:</strong> Identifica y clasifica características, bases, caras laterales, aristas y vértices de los prismas.</li>
+                    <li><strong>Usa estrategias:</strong> Calcula con precisión áreas laterales, totales y volúmenes usando unidades métricas (cm², m², cm³, m³, L).</li>
+                    <li><strong>Argumenta:</strong> Evalúa procedimientos, detecta inconsistencias y justifica resultados según el contexto cotidiano.</li>
+                </ul>
+            </div>
+
+            <div class="motivational-msg" id="motivationalMsg">
+                ¡Eres un gran explorador de la geometría de nuestra región! Sigue aplicando la matemática en tu vida cotidiana.
+            </div>
+
+            <div class="authors-box">
+                Autoras: Llamuco Roncal Katerin y Porta Quinto Vanesa
+            </div>
+
+            <div class="action-bar" style="justify-content: center; margin-top: 10px;">
+                <button class="btn btn-secondary" id="btnNewModule" onclick="generateNewModule()">
+                    🔄 GENERAR NUEVO MÓDULO (NUEVAS SITUACIONES)
+                </button>
+            </div>
+        </div>
+    </main>
+</div>
+
+<script>
+/**
+ * RECURSO EDUCATIVO DIGITAL INTERACTIVO (RED) - MATEMÁTICA 2.° SECUNDARIA
+ * Prismas: Áreas y Volúmenes en el Valle del Mantaro
+ * Diseñado bajo enfoque socioconstructivista y CNEB (MINEDU).
+ */
+
+// Estado global de la aplicación
+let currentActivityIndex = 0;
+let userScore = 0;
+let attemptCount = 0;
+let totalAttemptsAll = 0;
+let correctFirstTryCount = 0;
+let currentSelection = null;
+let currentModuleData = [];
+
+// Base de datos de contextos del Valle del Mantaro para la generación de módulos
+const mantaroContexts = [
+    {
+        town: "San Jerónimo de Tunán",
+        item: "Cajón de madera para orfebrería de plata",
+        story: "Los artesanos orfebres de San Jerónimo guardan sus herramientas finas en cajones de madera con forma de prisma recto."
+    },
+    {
+        town: "Concepción",
+        item: "Caja de tradicionales alcajores y chocolates",
+        story: "En Concepción, los deliciosos dulces artesanales se empaquetan en cajas prismáticas especiales para conservar su frescura."
+    },
+    {
+        town: "Cochas Chico / Cochas Grande",
+        item: "Estuche protector para mates burilados",
+        story: "Los maestros buriladores de Cochas protegen sus mejores obras de arte en estuches geométricos resistentes."
+    },
+    {
+        town: "Chupaca",
+        item: "Troje o almacén prismático para maíz y papas",
+        story: "En el campo chupaquino, los agricultores construyen trojes bien ventilados para guardar las cosechas de maíz y papa."
+    },
+    {
+        town: "Huancayo",
+        item: "Depósito o tanque de agua rectangular",
+        story: "En los hogares de la ciudad de Huancayo se instalan tanques de agua prismáticos para asegurar el abastecimiento de agua limpia."
+    },
+    {
+        town: "Jauja",
+        item: "Pedestal para artesanías de la Tunantada",
+        story: "En la primera capital del Perú se exhiben las máscaras y vestimentas de la Tunantada sobre bases prismáticas de exhibición."
+    },
+    {
+        town: "Sicaya",
+        item: "Contenedor de forraje para ganado vacuno",
+        story: "Los ganaderos de Sicaya organizan el alimento de sus vacas en cajones prismáticos de distribución rápida."
+    }
+];
+
+// Generador de gráficos SVG vectoriales completos de Prismas Rectos
+function generatePrismSVG(type, params = {}) {
+    const {
+        highlight = null,
+        interactive = false,
+        width = 240,
+        height = 220,
+        labels = {}
+    } = params;
+
+    let svgContent = "";
+    
+    if (type === 'quadrangular' || type === 'rectangular') {
+        // Prisma Rectangular / Cuadrangular
+        // Puntos axonométricos: Frontal (x1,y1)-(x2,y1)-(x2,y2)-(x1,y2), Trasero con offset (dx, -dy)
+        const x1 = 50, y1 = 90, w = 110, h = 100, dx = 40, dy = 35;
+        const x2 = x1 + w, y2 = y1 + h;
+        
+        // Puntos:
+        // A(x1,y2), B(x2,y2), C(x2,y1), D(x1,y1) -> Frente
+        // E(x1+dx, y2-dy), F(x2+dx, y2-dy), G(x2+dx, y1-dy), H(x1+dx, y1-dy) -> Atrás
+
+        const P = {
+            A: [x1, y2], B: [x2, y2], C: [x2, y1], D: [x1, y1],
+            E: [x1+dx, y2-dy], F: [x2+dx, y2-dy], G: [x2+dx, y1-dy], H: [x1+dx, y1-dy]
+        };
+
+        // Caras
+        const baseBottom = `${P.A[0]},${P.A[1]} ${P.B[0]},${P.B[1]} ${P.F[0]},${P.F[1]} ${P.E[0]},${P.E[1]}`;
+        const baseTop = `${P.D[0]},${P.D[1]} ${P.C[0]},${P.C[1]} ${P.G[0]},${P.G[1]} ${P.H[0]},${P.H[1]}`;
+        const faceFront = `${P.A[0]},${P.A[1]} ${P.B[0]},${P.B[1]} ${P.C[0]},${P.C[1]} ${P.D[0]},${P.D[1]}`;
+        const faceRight = `${P.B[0]},${P.B[1]} ${P.F[0]},${P.F[1]} ${P.G[0]},${P.G[1]} ${P.C[0]},${P.C[1]}`;
+
+        svgContent = `
+            <svg width="${width}" height="${height}" viewBox="0 0 250 230" xmlns="http://www.w3.org/2000/svg">
+                <!-- Caras de fondo para coloración -->
+                <polygon points="${baseTop}" fill="#0d9488" fill-opacity="${highlight==='bases'? '0.6':'0.25'}" stroke="#0f766e" stroke-width="1.5" class="${interactive?'svg-interactive-element':''}" data-element="bases" />
+                <polygon points="${baseBottom}" fill="#0d9488" fill-opacity="${highlight==='bases'? '0.6':'0.15'}" stroke="#0f766e" stroke-width="1.5" class="${interactive?'svg-interactive-element':''}" data-element="bases" />
+                <polygon points="${faceFront}" fill="#3b82f6" fill-opacity="${highlight==='caras'? '0.6':'0.2'}" stroke="#1d4ed8" stroke-width="1.5" class="${interactive?'svg-interactive-element':''}" data-element="caras" />
+                <polygon points="${faceRight}" fill="#3b82f6" fill-opacity="${highlight==='caras'? '0.6':'0.3'}" stroke="#1d4ed8" stroke-width="1.5" class="${interactive?'svg-interactive-element':''}" data-element="caras" />
+                
+                <!-- Aristas Ocultas (Punteadas) -->
+                <line x1="${P.A[0]}" y1="${P.A[1]}" x2="${P.E[0]}" y2="${P.E[1]}" stroke="#64748b" stroke-width="1.5" stroke-dasharray="4,4" class="${interactive?'svg-interactive-element':''}" data-element="aristas" />
+                <line x1="${P.E[0]}" y1="${P.E[1]}" x2="${P.F[0]}" y2="${P.F[1]}" stroke="#64748b" stroke-width="1.5" stroke-dasharray="4,4" class="${interactive?'svg-interactive-element':''}" data-element="aristas" />
+                <line x1="${P.E[0]}" y1="${P.E[1]}" x2="${P.H[0]}" y2="${P.H[1]}" stroke="#64748b" stroke-width="1.5" stroke-dasharray="4,4" class="${interactive?'svg-interactive-element':''}" data-element="aristas" />
+
+                <!-- Aristas Visibles -->
+                <line x1="${P.A[0]}" y1="${P.A[1]}" x2="${P.B[0]}" y2="${P.B[1]}" stroke="${highlight==='aristas'?'#d97706':'#1e293b'}" stroke-width="${highlight==='aristas'?'3':'2'}" class="${interactive?'svg-interactive-element':''}" data-element="aristas" />
+                <line x1="${P.B[0]}" y1="${P.B[1]}" x2="${P.C[0]}" y2="${P.C[1]}" stroke="${highlight==='aristas'?'#d97706':'#1e293b'}" stroke-width="${highlight==='aristas'?'3':'2'}" class="${interactive?'svg-interactive-element':''}" data-element="aristas" />
+                <line x1="${P.C[0]}" y1="${P.C[1]}" x2="${P.D[0]}" y2="${P.D[1]}" stroke="${highlight==='aristas'?'#d97706':'#1e293b'}" stroke-width="${highlight==='aristas'?'3':'2'}" class="${interactive?'svg-interactive-element':''}" data-element="aristas" />
+                <line x1="${P.D[0]}" y1="${P.D[1]}" x2="${P.A[0]}" y2="${P.A[1]}" stroke="${highlight==='aristas'?'#d97706':'#1e293b'}" stroke-width="${highlight==='aristas'?'3':'2'}" class="${interactive?'svg-interactive-element':''}" data-element="aristas" />
+
+                <line x1="${P.B[0]}" y1="${P.B[1]}" x2="${P.F[0]}" y2="${P.F[1]}" stroke="${highlight==='aristas'?'#d97706':'#1e293b'}" stroke-width="${highlight==='aristas'?'3':'2'}" class="${interactive?'svg-interactive-element':''}" data-element="aristas" />
+                <line x1="${P.C[0]}" y1="${P.C[1]}" x2="${P.G[0]}" y2="${P.G[1]}" stroke="${highlight==='aristas'?'#d97706':'#1e293b'}" stroke-width="${highlight==='aristas'?'3':'2'}" class="${interactive?'svg-interactive-element':''}" data-element="aristas" />
+                <line x1="${P.D[0]}" y1="${P.D[1]}" x2="${P.H[0]}" y2="${P.H[1]}" stroke="${highlight==='aristas'?'#d97706':'#1e293b'}" stroke-width="${highlight==='aristas'?'3':'2'}" class="${interactive?'svg-interactive-element':''}" data-element="aristas" />
+
+                <line x1="${P.F[0]}" y1="${P.F[1]}" x2="${P.G[0]}" y2="${P.G[1]}" stroke="${highlight==='aristas'?'#d97706':'#1e293b'}" stroke-width="${highlight==='aristas'?'3':'2'}" class="${interactive?'svg-interactive-element':''}" data-element="aristas" />
+                <line x1="${P.G[0]}" y1="${P.G[1]}" x2="${P.H[0]}" y2="${P.H[1]}" stroke="${highlight==='aristas'?'#d97706':'#1e293b'}" stroke-width="${highlight==='aristas'?'3':'2'}" class="${interactive?'svg-interactive-element':''}" data-element="aristas" />
+
+                <!-- Vértices -->
+                ${Object.keys(P).map(k => `
+                    <circle cx="${P[k][0]}" cy="${P[k][1]}" r="${highlight==='vertices'?'6':'4'}" fill="${highlight==='vertices'?'#dc2626':'#0f766e'}" class="${interactive?'svg-interactive-element':''}" data-element="vertices" />
+                `).join('')}
+
+                <!-- Etiquetas opcionales de medidas -->
+                ${labels.length ? `<text x="${(P.A[0]+P.B[0])/2}" y="${P.A[1]+18}" font-size="12" font-weight="bold" fill="#0f766e" text-anchor="middle">Largo = ${labels.length}</text>` : ''}
+                ${labels.width ? `<text x="${(P.B[0]+P.F[0])/2 + 12}" y="${(P.B[1]+P.F[1])/2 + 12}" font-size="12" font-weight="bold" fill="#0f766e" text-anchor="start">Ancho = ${labels.width}</text>` : ''}
+                ${labels.height ? `<text x="${P.A[0]-10}" y="${(P.A[1]+P.D[1])/2}" font-size="12" font-weight="bold" fill="#d97706" text-anchor="end">Altura = ${labels.height}</text>` : ''}
+                ${labels.baseArea ? `<text x="${(P.D[0]+P.G[0])/2}" y="${(P.D[1]+P.G[1])/2}" font-size="11" font-weight="bold" fill="#2563eb" text-anchor="middle">Área Base = ${labels.baseArea}</text>` : ''}
+            </svg>
+        `;
+    } else if (type === 'triangular') {
+        // Prisma Triangular
+        const P = {
+            A: [60, 180], B: [150, 180], C: [100, 130], // Base inferior
+            D: [60, 70],  E: [150, 70],  F: [100, 20]   // Base superior
+        };
+
+        const baseBottom = `${P.A[0]},${P.A[1]} ${P.B[0]},${P.B[1]} ${P.C[0]},${P.C[1]}`;
+        const baseTop = `${P.D[0]},${P.D[1]} ${P.E[0]},${P.E[1]} ${P.F[0]},${P.F[1]}`;
+        const face1 = `${P.A[0]},${P.A[1]} ${P.B[0]},${P.B[1]} ${P.E[0]},${P.E[1]} ${P.D[0]},${P.D[1]}`;
+
+        svgContent = `
+            <svg width="${width}" height="${height}" viewBox="0 0 230 210" xmlns="http://www.w3.org/2000/svg">
+                <polygon points="${baseTop}" fill="#0d9488" fill-opacity="${highlight==='bases'?'0.6':'0.25'}" stroke="#0f766e" stroke-width="1.5" class="${interactive?'svg-interactive-element':''}" data-element="bases" />
+                <polygon points="${baseBottom}" fill="#0d9488" fill-opacity="${highlight==='bases'?'0.6':'0.15'}" stroke="#0f766e" stroke-width="1.5" class="${interactive?'svg-interactive-element':''}" data-element="bases" />
+                <polygon points="${face1}" fill="#3b82f6" fill-opacity="${highlight==='caras'?'0.6':'0.2'}" stroke="#1d4ed8" stroke-width="1.5" class="${interactive?'svg-interactive-element':''}" data-element="caras" />
+
+                <!-- Ocultas -->
+                <line x1="${P.C[0]}" y1="${P.C[1]}" x2="${P.F[0]}" y2="${P.F[1]}" stroke="#64748b" stroke-width="1.5" stroke-dasharray="4,4" class="${interactive?'svg-interactive-element':''}" data-element="aristas" />
+                <line x1="${P.A[0]}" y1="${P.A[1]}" x2="${P.C[0]}" y2="${P.C[1]}" stroke="#64748b" stroke-width="1.5" stroke-dasharray="4,4" class="${interactive?'svg-interactive-element':''}" data-element="aristas" />
+                <line x1="${P.B[0]}" y1="${P.B[1]}" x2="${P.C[0]}" y2="${P.C[1]}" stroke="#64748b" stroke-width="1.5" stroke-dasharray="4,4" class="${interactive?'svg-interactive-element':''}" data-element="aristas" />
+
+                <!-- Visibles -->
+                <line x1="${P.A[0]}" y1="${P.A[1]}" x2="${P.B[0]}" y2="${P.B[1]}" stroke="${highlight==='aristas'?'#d97706':'#1e293b'}" stroke-width="2" class="${interactive?'svg-interactive-element':''}" data-element="aristas" />
+                <line x1="${P.A[0]}" y1="${P.A[1]}" x2="${P.D[0]}" y2="${P.D[1]}" stroke="${highlight==='aristas'?'#d97706':'#1e293b'}" stroke-width="2" class="${interactive?'svg-interactive-element':''}" data-element="aristas" />
+                <line x1="${P.B[0]}" y1="${P.B[1]}" x2="${P.E[0]}" y2="${P.E[1]}" stroke="${highlight==='aristas'?'#d97706':'#1e293b'}" stroke-width="2" class="${interactive?'svg-interactive-element':''}" data-element="aristas" />
+                <line x1="${P.D[0]}" y1="${P.D[1]}" x2="${P.E[0]}" y2="${P.E[1]}" stroke="${highlight==='aristas'?'#d97706':'#1e293b'}" stroke-width="2" class="${interactive?'svg-interactive-element':''}" data-element="aristas" />
+                <line x1="${P.E[0]}" y1="${P.E[1]}" x2="${P.F[0]}" y2="${P.F[1]}" stroke="${highlight==='aristas'?'#d97706':'#1e293b'}" stroke-width="2" class="${interactive?'svg-interactive-element':''}" data-element="aristas" />
+                <line x1="${P.F[0]}" y1="${P.F[1]}" x2="${P.D[0]}" y2="${P.D[1]}" stroke="${highlight==='aristas'?'#d97706':'#1e293b'}" stroke-width="2" class="${interactive?'svg-interactive-element':''}" data-element="aristas" />
+
+                ${Object.keys(P).map(k => `
+                    <circle cx="${P[k][0]}" cy="${P[k][1]}" r="${highlight==='vertices'?'6':'4'}" fill="${highlight==='vertices'?'#dc2626':'#0f766e'}" class="${interactive?'svg-interactive-element':''}" data-element="vertices" />
+                `).join('')}
+
+                ${labels.side ? `<text x="${(P.A[0]+P.B[0])/2}" y="${P.A[1]+18}" font-size="12" font-weight="bold" fill="#0f766e" text-anchor="middle">Lado base = ${labels.side}</text>` : ''}
+                ${labels.height ? `<text x="${P.A[0]-10}" y="${(P.A[1]+P.D[1])/2}" font-size="12" font-weight="bold" fill="#d97706" text-anchor="end">Altura = ${labels.height}</text>` : ''}
+                ${labels.baseArea ? `<text x="${(P.D[0]+P.E[0])/2}" y="${(P.D[1]+P.F[1])/2}" font-size="11" font-weight="bold" fill="#2563eb" text-anchor="middle">Área Base = ${labels.baseArea}</text>` : ''}
+            </svg>
+        `;
+    } else if (type === 'hexagonal') {
+        // Prisma Hexagonal
+        // Hexágono base
+        const cx1 = 110, cy1 = 175, rx = 55, ry = 22, h = 100;
+        const ptsBot = [], ptsTop = [];
+        for(let i=0; i<6; i++) {
+            let ang = (i * 60 - 30) * Math.PI / 180;
+            let x = cx1 + rx * Math.cos(ang);
+            let y = cy1 + ry * Math.sin(ang);
+            ptsBot.push([x,y]);
+            ptsTop.push([x, y - h]);
+        }
+        const strBot = ptsBot.map(p => `${p[0]},${p[1]}`).join(' ');
+        const strTop = ptsTop.map(p => `${p[0]},${p[1]}`).join(' ');
+
+        svgContent = `
+            <svg width="${width}" height="${height}" viewBox="0 0 240 220" xmlns="http://www.w3.org/2000/svg">
+                <polygon points="${strTop}" fill="#0d9488" fill-opacity="${highlight==='bases'?'0.6':'0.25'}" stroke="#0f766e" stroke-width="1.5" class="${interactive?'svg-interactive-element':''}" data-element="bases" />
+                <polygon points="${strBot}" fill="#0d9488" fill-opacity="${highlight==='bases'?'0.6':'0.15'}" stroke="#0f766e" stroke-width="1.5" class="${interactive?'svg-interactive-element':''}" data-element="bases" />
+
+                <!-- Aristas verticales -->
+                ${ptsBot.map((p, i) => {
+                    let pt = ptsTop[i];
+                    let isBack = i === 3 || i === 4 || i === 5;
+                    return `<line x1="${p[0]}" y1="${p[1]}" x2="${pt[0]}" y2="${pt[1]}" stroke="${isBack?'#94a3b8':'#1e293b'}" stroke-width="1.5" ${isBack?'stroke-dasharray="4,4"':''} class="${interactive?'svg-interactive-element':''}" data-element="aristas" />`;
+                }).join('')}
+
+                <!-- Aristas superior e inferior -->
+                <polygon points="${strTop}" fill="none" stroke="#1e293b" stroke-width="2" class="${interactive?'svg-interactive-element':''}" data-element="aristas" />
+                <polygon points="${strBot}" fill="none" stroke="#1e293b" stroke-width="2" class="${interactive?'svg-interactive-element':''}" data-element="aristas" />
+
+                <!-- Vértices -->
+                ${ptsBot.concat(ptsTop).map(p => `
+                    <circle cx="${p[0]}" cy="${p[1]}" r="${highlight==='vertices'?'5':'3.5'}" fill="${highlight==='vertices'?'#dc2626':'#0f766e'}" class="${interactive?'svg-interactive-element':''}" data-element="vertices" />
+                `).join('')}
+
+                ${labels.side ? `<text x="${cx1}" y="${cy1+18}" font-size="12" font-weight="bold" fill="#0f766e" text-anchor="middle">Lado = ${labels.side}</text>` : ''}
+                ${labels.height ? `<text x="${ptsBot[0][0]+10}" y="${(ptsBot[0][1]+ptsTop[0][1])/2}" font-size="12" font-weight="bold" fill="#d97706" text-anchor="start">Altura = ${labels.height}</text>` : ''}
+                ${labels.baseArea ? `<text x="${cx1}" y="${cy1-h-5}" font-size="11" font-weight="bold" fill="#2563eb" text-anchor="middle">Área Base = ${labels.baseArea}</text>` : ''}
+            </svg>
+        `;
+    } else if (type === 'pentagonal') {
+        // Prisma Pentagonal
+        const cx1 = 110, cy1 = 170, rx = 50, ry = 22, h = 95;
+        const ptsBot = [], ptsTop = [];
+        for(let i=0; i<5; i++) {
+            let ang = (i * 72 - 18) * Math.PI / 180;
+            let x = cx1 + rx * Math.cos(ang);
+            let y = cy1 + ry * Math.sin(ang);
+            ptsBot.push([x,y]);
+            ptsTop.push([x, y - h]);
+        }
+        const strBot = ptsBot.map(p => `${p[0]},${p[1]}`).join(' ');
+        const strTop = ptsTop.map(p => `${p[0]},${p[1]}`).join(' ');
+
+        svgContent = `
+            <svg width="${width}" height="${height}" viewBox="0 0 240 210" xmlns="http://www.w3.org/2000/svg">
+                <polygon points="${strTop}" fill="#0d9488" fill-opacity="${highlight==='bases'?'0.6':'0.25'}" stroke="#0f766e" stroke-width="1.5" class="${interactive?'svg-interactive-element':''}" data-element="bases" />
+                <polygon points="${strBot}" fill="#0d9488" fill-opacity="${highlight==='bases'?'0.6':'0.15'}" stroke="#0f766e" stroke-width="1.5" class="${interactive?'svg-interactive-element':''}" data-element="bases" />
+
+                ${ptsBot.map((p, i) => {
+                    let pt = ptsTop[i];
+                    let isBack = i === 2 || i === 3;
+                    return `<line x1="${p[0]}" y1="${p[1]}" x2="${pt[0]}" y2="${pt[1]}" stroke="${isBack?'#94a3b8':'#1e293b'}" stroke-width="1.5" ${isBack?'stroke-dasharray="4,4"':''} class="${interactive?'svg-interactive-element':''}" data-element="aristas" />`;
+                }).join('')}
+
+                <polygon points="${strTop}" fill="none" stroke="#1e293b" stroke-width="2" class="${interactive?'svg-interactive-element':''}" data-element="aristas" />
+                <polygon points="${strBot}" fill="none" stroke="#1e293b" stroke-width="2" class="${interactive?'svg-interactive-element':''}" data-element="aristas" />
+
+                ${ptsBot.concat(ptsTop).map(p => `
+                    <circle cx="${p[0]}" cy="${p[1]}" r="${highlight==='vertices'?'5':'3.5'}" fill="${highlight==='vertices'?'#dc2626':'#0f766e'}" class="${interactive?'svg-interactive-element':''}" data-element="vertices" />
+                `).join('')}
+
+                ${labels.side ? `<text x="${cx1}" y="${cy1+18}" font-size="12" font-weight="bold" fill="#0f766e" text-anchor="middle">Lado = ${labels.side}</text>` : ''}
+                ${labels.height ? `<text x="${ptsBot[0][0]+10}" y="${(ptsBot[0][1]+ptsTop[0][1])/2}" font-size="12" font-weight="bold" fill="#d97706" text-anchor="start">Altura = ${labels.height}</text>` : ''}
+                ${labels.baseArea ? `<text x="${cx1}" y="${cy1-h-5}" font-size="11" font-weight="bold" fill="#2563eb" text-anchor="middle">Área Base = ${labels.baseArea}</text>` : ''}
+            </svg>
+        `;
+    }
+
+    return svgContent;
+}
+
+// Generador de actividades por módulo con datos coherentes calculados matemáticamente
+function buildModuleData() {
+    // Seleccionamos contextos aleatorios de la región sin repetir
+    const shuffledContexts = [...mantaroContexts].sort(() => 0.5 - Math.random());
+    const c1 = shuffledContexts[0];
+    const c2 = shuffledContexts[1];
+    const c3 = shuffledContexts[2];
+    const c4 = shuffledContexts[3];
+    const c5 = shuffledContexts[4];
+
+    // Datos numéricos dinámicos pero reales y exactos para Actividad 3, 4 y 5
+    // Actividad 3: Área
+    const l3 = Math.floor(Math.random() * 5) + 4; // largo (4 a 8)
+    const w3 = Math.floor(Math.random() * 3) + 3; // ancho (3 a 5)
+    const h3 = Math.floor(Math.random() * 6) + 5; // altura (5 a 10)
+    const perim3 = 2 * (l3 + w3);
+    const areaBase3 = l3 * w3;
+    const areaLat3 = perim3 * h3;
+    const areaTotal3 = areaLat3 + (2 * areaBase3);
+
+    // Actividad 4: Volumen / Capacidad
+    const l4 = Math.floor(Math.random() * 4) + 5; // (5 a 8 m)
+    const w4 = Math.floor(Math.random() * 3) + 2; // (2 a 4 m)
+    const h4 = Math.floor(Math.random() * 3) + 2; // (2 a 4 m)
+    const baseArea4 = l4 * w4;
+    const volM3 = baseArea4 * h4;
+    const volLitros = volM3 * 1000;
+
+    // Actividad 5: Problema complejo
+    const side5 = Math.floor(Math.random() * 4) + 3; // lado base prisma triangular o cuadrangular (3 a 6)
+    const h5 = Math.floor(Math.random() * 5) + 8; // altura prisma (8 a 12)
+    const baseArea5 = side5 * side5; // Prisma cuadrangular regular
+    const perim5 = 4 * side5;
+    const areaLat5 = perim5 * h5;
+    const areaTotal5 = areaLat5 + (2 * baseArea5);
+    const vol5 = baseArea5 * h5;
+
+    return [
+        // ACTIVIDAD 1: Identificación de Elementos (SVG Interactivo)
+        {
+            id: 1,
+            level: "Nivel Básico - Exploración Visual",
+            title: "Reconocimiento de los Elementos de un Prisma Recto",
+            context: `En <strong>${c1.town}</strong>, se elabora la siguiente estructura: <em>"${c1.item}"</em>. ${c1.story} Para comprender su geometría, debemos reconocer sus partes fundamentales.`,
+            question: "Haz clic directamente sobre la figura SVG para seleccionar el elemento geométrico solicitado: <strong>SELECCIONA UNA DE LAS BASES DEL PRISMA</strong>.",
+            type: "svg_click",
+            targetElement: "bases",
+            prismType: "rectangular",
+            svgParams: { interactive: true },
+            hint1: "Recuerda que un prisma recto tiene dos bases iguales y paralelas en la parte superior e inferior.",
+            hint2: "¿Dónde se apoyaría la caja o estructura? Examina la cara plana superior o la cara plana inferior.",
+            explanation: "¡Correcto! Las bases de un prisma recto son las dos caras congruentes y paralelas que definen la forma del prisma."
+        },
+        // ACTIVIDAD 2: Clasificación de Prismas
+        {
+            id: 2,
+            level: "Nivel Básico / Intermedio - Clasificación",
+            title: "Clasificación de Prismas según sus Bases",
+            context: `Un grupo de estudiantes de secundaria en <strong>${c2.town}</strong> diseña un <em>"${c2.item}"</em>. ${c2.story} La base de este contenedor tiene 6 lados iguales y sus caras laterales son rectángulos perpendiculares.`,
+            question: "¿Cómo se clasifica exactamente este prisma recto y cuántas caras laterales posee en total?",
+            type: "choice",
+            prismType: "hexagonal",
+            options: [
+                { id: "a", text: "Prisma Pentagonal, con 5 caras laterales.", correct: false },
+                { id: "b", text: "Prisma Hexagonal, con 6 caras laterales.", correct: true },
+                { id: "c", text: "Prisma Heptagonal, con 7 caras laterales.", correct: false },
+                { id: "d", text: "Prisma Cuadrangular, con 4 caras laterales.", correct: false }
+            ],
+            hint1: "Cuenta el número de lados que tiene la base del prisma. El número de lados de la base determine el nombre del prisma y la cantidad de caras laterales.",
+            hint2: "Si la base tiene 6 lados, el prefijo geométrico para seis es 'Hexa-'. ¿Cuántos rectángulos laterales se forman?",
+            explanation: "¡Excelente! Al tener una base de 6 lados, se clasifica como Prisma Hexagonal y tiene exactamente 6 caras laterales rectangulares."
+        },
+        // ACTIVIDAD 3: Área Lateral y Total
+        {
+            id: 3,
+            level: "Nivel Intermedio - Cálculo de Áreas",
+            title: "Cálculo del Área Lateral y Área Total",
+            context: `Un artesano en <strong>${c3.town}</strong> elabora un <em>"${c3.item}"</em> con forma de prisma recto rectangular. Sus dimensiones son: Largo = ${l3} cm, Ancho = ${w3} cm y Altura = ${h3} cm. ${c3.story}`,
+            question: "Calcula el Área Total del prisma. Para ello recuerda: Área total = Área lateral + (2 × Área de la base), donde Área lateral = Perímetro de la base × altura.",
+            type: "number",
+            prismType: "rectangular",
+            labels: { length: `${l3} cm`, width: `${w3} cm`, height: `${h3} cm` },
+            correctValue: areaTotal3,
+            unit: "cm²",
+            hint1: "Paso 1: Calcula el Perímetro de la base: (2 × Largo) + (2 × Ancho). Luego multiplica por la Altura para obtener el Área Lateral. Paso 2: Suma el doble del Área de la base.",
+            hint2: `Verifica tus cuentas: Perímetro = 2×(${l3}+${w3}) = ${perim3} cm. Área Lateral = ${perim3} × ${h3} = ${areaLat3} cm². Área de la base = ${l3} × ${w3} = ${areaBase3} cm². ¡Ahora suma el Área Lateral más 2 veces ${areaBase3}!`,
+            explanation: `¡Formidable! Área Lateral = ${perim3} cm × ${h3} cm = ${areaLat3} cm². Área de 2 bases = 2 × ${areaBase3} cm² = ${2*areaBase3} cm². Área Total = ${areaLat3} + ${2*areaBase3} = ${areaTotal3} cm².`
+        },
+        // ACTIVIDAD 4: Volumen y Capacidad
+        {
+            id: 4,
+            level: "Nivel Intermedio / Avanzado - Volumen y Capacidad",
+            title: "Cálculo de Volumen y Capacidad en Litros",
+            context: `En la comunidad de <strong>${c4.town}</strong> se ha construido un <em>"${c4.item}"</em> en forma de prisma recto rectangular para almacenar recursos. Sus medidas internas son: Largo = ${l4} m, Ancho = ${w4} m y Altura = ${h4} m. ${c4.story}`,
+            question: "¿Cuál es el volumen total del contenedor en metros cúbicos (m³) y a cuántos Litros (L) de capacidad equivale? (Dato: 1 m³ = 1000 Litros). Ingresa el volumen en m³.",
+            type: "number",
+            prismType: "rectangular",
+            labels: { length: `${l4} m`, width: `${w4} m`, height: `${h4} m` },
+            correctValue: volM3,
+            unit: "m³",
+            secondaryQuestionText: `Equivale a ${volLitros.toLocaleString()} Litros de agua.`,
+            hint1: "Recuerda la fórmula fundamental del volumen: Volumen = Área de la base × Altura = Largo × Ancho × Altura.",
+            hint2: `Multiplica las tres dimensiones directamente: ${l4} m × ${w4} m × ${h4} m. Revisa si el producto numérico es exacto.`,
+            explanation: `¡Muy bien calculated! El volumen es Volumen = ${l4} × ${w4} × ${h4} = ${volM3} m³. Y como cada 1 m³ equivale a 1000 Litros, la capacidad total es de ${volLitros.toLocaleString()} Litros.`
+        },
+        // ACTIVIDAD 5: Resolución de Problema Complejo y Argumentación
+        {
+            id: 5,
+            level: "Nivel Avanzado - Problema Complejo e Interpretación",
+            title: "Evaluación de Procedimientos y Selección de Estrategia",
+            context: `En un taller cultural de <strong>${c5.town}</strong>, se diseña un <em>"${c5.item}"</em> con forma de prisma cuadrangular regular (base cuadrada de lado ${side5} cm y altura de ${h5} cm). Un estudiante afirma que para calcular la cantidad de papel especial que cubrirá TODA la superficie exterior, solo debe multiplicar el lado por la altura 4 veces. ${c5.story}`,
+            question: "¿Es correcta la afirmación del estudiante? Selecciona la evaluación y el procedimiento geométrico correcto:",
+            type: "choice",
+            prismType: "quadrangular",
+            labels: { length: `${side5} cm`, width: `${side5} cm`, height: `${h5} cm` },
+            options: [
+                {
+                    id: "a",
+                    text: `Incorrecto. Al multiplicar 4 × (${side5} × ${h5}) solo obtiene el Área Lateral (${areaLat5} cm²). Le falta sumar el área de las 2 bases cuadradas (2 × ${baseArea5} cm²), siendo el Área Total ${areaTotal5} cm².`,
+                    correct: true
+                },
+                {
+                    id: "b",
+                    text: `Correcto. Al multiplicar 4 veces el lado por la altura ya se obtiene el área total cubierta sin importar las bases.`,
+                    correct: false
+                },
+                {
+                    id: "c",
+                    text: `Incorrecto. El procedimiento calcula el Volumen del prisma (${vol5} cm³) y no la cantidad de papel de la superficie.`,
+                    correct: false
+                },
+                {
+                    id: "d",
+                    text: `Correcto. Porque un prisma cuadrangular regular solo tiene 4 caras en total.`,
+                    correct: false
+                }
+            ],
+            hint1: "Analiza qué partes del prisma representan el envoltorio total (cubrir exteriormente). ¿Un prisma solo tiene caras laterales o también tiene bases?",
+            hint2: "Recuerda: Área Total = Área Lateral + 2 × (Área de la base). 4 × (lado × altura) solo calcula la superficie lateral (las 4 paredes). ¿Qué pasa con las dos tapas o bases?",
+            explanation: `¡Excelente razonamiento matemático! Para forrar completamente el prisma se requiere cubrir las 4 caras laterales MÁS las 2 bases cuadradas. Área Total = ${areaLat5} + 2(${baseArea5}) = ${areaTotal5} cm².`
+        }
+    ];
+}
+
+// Inicializar el recurso educativo
+function initRED() {
+    currentActivityIndex = 0;
+    userScore = 0;
+    attemptCount = 0;
+    totalAttemptsAll = 0;
+    correctFirstTryCount = 0;
+    currentModuleData = buildModuleData();
+    
+    document.getElementById('finalScreen').style.display = 'none';
+    document.getElementById('activityContainer').style.display = 'flex';
+    document.getElementById('progressContainer').style.display = 'flex';
+    
+    renderActivity();
+}
+
+// Renderizar la actividad actual
+function renderActivity() {
+    attemptCount = 0;
+    currentSelection = null;
+    const act = currentModuleData[currentActivityIndex];
+
+    // Actualizar barra de progreso
+    const progressPercent = ((currentActivityIndex + 1) / currentModuleData.length) * 100;
+    document.getElementById('progressFill').style.width = `${progressPercent}%`;
+    document.getElementById('progressText').innerText = `Actividad ${currentActivityIndex + 1} de ${currentModuleData.length}`;
+    document.getElementById('scoreDisplay').innerText = `Puntaje: ${userScore} pts`;
+
+    const container = document.getElementById('activityContainer');
+    
+    // Construcción del HTML dinámico de la actividad
+    let interactiveSectionHTML = "";
+
+    if (act.type === "svg_click") {
+        interactiveSectionHTML = `
+            <div class="interactive-layout">
+                <div class="svg-container">
+                    ${generatePrismSVG(act.prismType, { ...act.svgParams, labels: act.labels || {} })}
+                    <div class="svg-hint">👈 Haz clic sobre el elemento solicitado en la figura 3D.</div>
+                    <div class="click-target-info" id="clickTargetInfo">Elemento seleccionado: Ninguno</div>
+                </div>
+                <div class="question-box">
+                    <p class="question-text">${act.question}</p>
+                    <div id="feedbackPanel" class="feedback-panel"></div>
+                    <div class="action-bar">
+                        <button class="btn btn-primary" id="btnCheck" onclick="checkAnswer()">COMPROBAR</button>
+                    </div>
+                </div>
+            </div>
+        `;
+    } else if (act.type === "choice") {
+        interactiveSectionHTML = `
+            <div class="interactive-layout">
+                <div class="svg-container">
+                    ${generatePrismSVG(act.prismType, { labels: act.labels || {} })}
+                    <div class="svg-hint">Representación geométrica de la situación.</div>
+                </div>
+                <div class="question-box">
+                    <p class="question-text">${act.question}</p>
+                    <div class="options-grid">
+                        ${act.options.map((opt, idx) => `
+                            <button class="option-btn" onclick="selectOption('${opt.id}')" id="opt-${opt.id}">
+                                <span class="option-radio"></span>
+                                <span>${opt.text}</span>
+                            </button>
+                        `).join('')}
+                    </div>
+                    <div id="feedbackPanel" class="feedback-panel"></div>
+                    <div class="action-bar">
+                        <button class="btn btn-primary" id="btnCheck" onclick="checkAnswer()">COMPROBAR</button>
+                    </div>
+                </div>
+            </div>
+        `;
+    } else if (act.type === "number") {
+        interactiveSectionHTML = `
+            <div class="interactive-layout">
+                <div class="svg-container">
+                    ${generatePrismSVG(act.prismType, { labels: act.labels || {} })}
+                    <div class="svg-hint">Diagrama con dimensiones contextualizadas.</div>
+                </div>
+                <div class="question-box">
+                    <p class="question-text">${act.question}</p>
+                    <div class="input-group">
+                        <div class="input-row">
+                            <input type="number" id="numInput" class="input-field" placeholder="Resultado" step="any" />
+                            <span class="unit-label">${act.unit}</span>
+                        </div>
+                        ${act.secondaryQuestionText ? `<p style="font-size:0.85rem; color:var(--text-muted);">${act.secondaryQuestionText}</p>` : ''}
+                    </div>
+                    <div id="feedbackPanel" class="feedback-panel"></div>
+                    <div class="action-bar">
+                        <button class="btn btn-primary" id="btnCheck" onclick="checkAnswer()">COMPROBAR</button>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
+    container.innerHTML = `
+        <div class="activity-header">
+            <span class="activity-level">${act.level}</span>
+            <h2 class="activity-title">${act.title}</h2>
+        </div>
+        <div class="context-box">
+            ${act.context}
+        </div>
+        ${interactiveSectionHTML}
+    `;
+
+    // Si es interacción por clic en SVG, adjuntar listeners
+    if (act.type === "svg_click") {
+        attachSVGListeners();
+    }
+}
+
+// Escuchadores de eventos para la interacción sobre elementos SVG
+function attachSVGListeners() {
+    const svgElements = document.querySelectorAll('.svg-interactive-element');
+    svgElements.forEach(el => {
+        el.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const elementType = el.getAttribute('data-element');
+            currentSelection = elementType;
+            
+            // Limpiar selección visual previa
+            svgElements.forEach(item => item.classList.remove('svg-element-selected'));
+            
+            // Destacar los elementos del mismo tipo
+            document.querySelectorAll(`[data-element="${elementType}"]`).forEach(item => {
+                item.classList.add('svg-element-selected');
+            });
+
+            const infoBox = document.getElementById('clickTargetInfo');
+            if (infoBox) {
+                let nameMap = {
+                    'bases': 'Base del prisma (Cara paralela superior/inferior)',
+                    'caras': 'Cara lateral del prisma',
+                    'aristas': 'Arista (Segmento de unión)',
+                    'vertices': 'Vértice (Punto de intersección)'
+                };
+                infoBox.innerText = `Elemento seleccionado: ${nameMap[elementType] || elementType}`;
+            }
+        });
+    });
+}
+
+// Seleccionar opción múltiple
+function selectOption(optionId) {
+    currentSelection = optionId;
+    document.querySelectorAll('.option-btn').forEach(btn => btn.classList.remove('selected'));
+    const selectedBtn = document.getElementById(`opt-${optionId}`);
+    if (selectedBtn) selectedBtn.classList.add('selected');
+}
+
+// Evaluación y Retroalimentación Socioconstructivista
+function checkAnswer() {
+    const act = currentModuleData[currentActivityIndex];
+    const feedbackPanel = document.getElementById('feedbackPanel');
+    const btnCheck = document.getElementById('btnCheck');
+    attemptCount++;
+    totalAttemptsAll++;
+
+    let isCorrect = false;
+
+    if (act.type === "svg_click") {
+        if (!currentSelection) {
+            showFeedback("warning", "¡Atención!", "Por favor, haz clic sobre alguna parte de la figura geométrica SVG antes de comprobar.");
+            return;
+        }
+        isCorrect = (currentSelection === act.targetElement);
+    } else if (act.type === "choice") {
+        if (!currentSelection) {
+            showFeedback("warning", "¡Atención!", "Por favor, selecciona una de las alternativas propuestas.");
+            return;
+        }
+        const selectedOpt = act.options.find(o => o.id === currentSelection);
+        isCorrect = selectedOpt ? selectedOpt.correct : false;
+    } else if (act.type === "number") {
+        const inputVal = parseFloat(document.getElementById('numInput').value);
+        if (isNaN(inputVal)) {
+            showFeedback("warning", "¡Atención!", "Por favor, ingresa un valor numérico para verificar tu respuesta.");
+            return;
+        }
+        // Tolerancia para decimales si aplica
+        isCorrect = Math.abs(inputVal - act.correctValue) < 0.1;
+    }
+
+    if (isCorrect) {
+        // Manejo de Acierto
+        if (attemptCount === 1) {
+            userScore += 20;
+            correctFirstTryCount++;
+        } else {
+            userScore += 10;
+        }
+
+        showFeedback("success", "¡Excelente trabajo!", act.explanation);
+        
+        btnCheck.innerText = "CONTINUAR ➔";
+        btnCheck.className = "btn btn-secondary";
+        btnCheck.onclick = nextActivity;
+
+    } else {
+        // Manejo de Error con Pistas Formativas Graduales
+        if (attemptCount === 1) {
+            showFeedback("error-1", "INTENTAR NUEVAMENTE - PISTA FORMATIVA", act.hint1);
+            btnCheck.innerText = "REVISAR E INTENTAR NUEVAMENTE";
+        } else {
+            showFeedback("error-2", "PREGUNTA REFLEXIVA PARA EXAMINAR TU PROCEDIMIENTO", act.hint2);
+            btnCheck.innerText = "COMPROBAR DE NUEVO";
+        }
+    }
+}
+
+// Desplegar panel de retroalimentación
+function showFeedback(type, title, message) {
+    const panel = document.getElementById('feedbackPanel');
+    panel.className = `feedback-panel ${type}`;
+    panel.innerHTML = `
+        <div class="feedback-title">${title}</div>
+        <div>${message}</div>
+    `;
+}
+
+// Avanzar a la siguiente actividad o finalizar
+function nextActivity() {
+    currentActivityIndex++;
+    if (currentActivityIndex < currentModuleData.length) {
+        renderActivity();
+    } else {
+        showFinalScreen();
+    }
+}
+
+// Pantalla Final de Logros
+function showFinalScreen() {
+    document.getElementById('activityContainer').style.display = 'none';
+    document.getElementById('progressContainer').style.display = 'none';
+    
+    const finalScreen = document.getElementById('finalScreen');
+    finalScreen.style.display = 'flex';
+
+    const efficiencyPercent = Math.round((correctFirstTryCount / currentModuleData.length) * 100);
+
+    document.getElementById('statCorrect').innerText = `${correctFirstTryCount}/${currentModuleData.length}`;
+    document.getElementById('statAttempts').innerText = totalAttemptsAll;
+    document.getElementById('statPercent').innerText = `${efficiencyPercent}%`;
+    document.getElementById('statScore').innerText = `${userScore} pts`;
+
+    const msgBox = document.getElementById('motivationalMsg');
+    if (efficiencyPercent >= 80) {
+        msgBox.innerText = "🌟 ¡Felicitaciones! Has demostrado un dominio sobresaliente de los prismas y su aplicación en la cultura del Valle del Mantaro. ¡Eres un talento en matemática!";
+    } else if (efficiencyPercent >= 50) {
+        msgBox.innerText = "👍 ¡Buen trabajo! Comprendes los elementos, áreas y volúmenes de los prismas. Continúa practicando para resolver problemas con mayor precisión.";
+    } else {
+        msgBox.innerText = "💪 ¡Sigue adelante! Cada error es una valiosa oportunidad de aprendizaje. Revisa los conceptos de bases, áreas y volumen y vuelve a intentarlo.";
+    }
+}
+
+// Generación de un Nuevo Módulo dinámico sin recargar la página
+function generateNewModule() {
+    initRED();
+}
+
+// Iniciar aplicación al cargar la ventana
+window.onload = function() {
+    initRED();
+};
+</script>
+</body>
+</html>
